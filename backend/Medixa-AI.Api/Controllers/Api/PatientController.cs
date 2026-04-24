@@ -1,5 +1,6 @@
-using Microsoft.AspNetCore.Mvc;
 using Medixa_AI.Application.DTOs;
+using Medixa_AI.Application.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Medixa_AI.Api.Controllers.Api
 {
@@ -7,52 +8,63 @@ namespace Medixa_AI.Api.Controllers.Api
     [Route("api/[controller]")]
     public class PatientController : ControllerBase
     {
-        // TODO: Inject IPatientService via constructor
-        // private readonly IPatientService _patientService;
+        private readonly IPatientService _patientService;
 
-        // GET: api/patient
+        public PatientController(IPatientService patientService)
+        {
+            _patientService = patientService;
+        }
+
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PatientDto>>> GetPatients()
+        public async Task<ActionResult<IEnumerable<PatientDto>>> GetAll()
         {
-            // var patients = await _patientService.GetAllPatientsAsync();
-            // return Ok(patients);
-            return Ok(new List<PatientDto>());
+            var patients = await _patientService.GetAllAsync();
+            return Ok(patients);
         }
 
-        // GET: api/patient/{id}
         [HttpGet("{id}")]
-        public async Task<ActionResult<PatientDto>> GetPatient(Guid id)
+        public async Task<ActionResult<PatientDto>> GetById(Guid id)
         {
-            // var patient = await _patientService.GetPatientByIdAsync(id);
-            // if (patient == null) return NotFound();
-            // return Ok(patient);
-            return Ok(new PatientDto());
+            var patient = await _patientService.GetByIdAsync(id);
+            if (patient == null)
+                return NotFound();
+            return Ok(patient);
         }
 
-        // POST: api/patient
         [HttpPost]
-        public async Task<ActionResult<PatientDto>> CreatePatient([FromBody] CreatePatientDto dto)
+        public async Task<ActionResult<PatientDto>> Create(PatientDto dto)
         {
-            // var patient = await _patientService.CreatePatientAsync(dto);
-            // return CreatedAtAction(nameof(GetPatient), new { id = patient.Id }, patient);
-            return Ok(new PatientDto());
+            if (string.IsNullOrWhiteSpace(dto.FullName))
+                return BadRequest("FullName is required.");
+
+            if (string.IsNullOrWhiteSpace(dto.NationalID))
+                return BadRequest("NationalID is required.");
+
+            var created = await _patientService.CreateAsync(dto);
+            return CreatedAtAction(nameof(GetById), new { id = created.PatientID }, created);
         }
 
-        // PUT: api/patient/{id}
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdatePatient(Guid id, [FromBody] UpdatePatientDto dto)
+        public async Task<IActionResult> Update(Guid id, PatientDto dto)
         {
-            // await _patientService.UpdatePatientAsync(id, dto);
-            // return NoContent();
+            if (string.IsNullOrWhiteSpace(dto.FullName))
+                return BadRequest("FullName is required.");
+
+            if (string.IsNullOrWhiteSpace(dto.NationalID))
+                return BadRequest("NationalID is required.");
+
+            var result = await _patientService.UpdateAsync(id, dto);
+            if (!result)
+                return NotFound();
             return NoContent();
         }
 
-        // DELETE: api/patient/{id}
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletePatient(Guid id)
+        public async Task<IActionResult> Delete(Guid id)
         {
-            // await _patientService.DeletePatientAsync(id);
-            // return NoContent();
+            var result = await _patientService.DeleteAsync(id);
+            if (!result)
+                return NotFound();
             return NoContent();
         }
     }

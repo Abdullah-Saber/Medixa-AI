@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Medixa-AI.Domain\Medixa_AI.Domain.csproj" />
+    <ProjectReference Include="..\Medixa-AI.Application\Medixa-AI.Application.csproj" />
   </ItemGroup>
 
 </Project>

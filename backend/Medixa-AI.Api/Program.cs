@@ -1,4 +1,5 @@
 using Medixa_AI.Application;
+using Medixa_AI.Infrastructure;
 using Medixa_AI.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,6 +21,9 @@ builder.Services.AddSwaggerGen(c =>
 // 🔹 Register DbContext (Infrastructure)
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// 🔹 Register Infrastructure Services
+builder.Services.AddInfrastructureServices();
 
 // 🔹 Register Application Services
 builder.Services.AddApplicationServices();

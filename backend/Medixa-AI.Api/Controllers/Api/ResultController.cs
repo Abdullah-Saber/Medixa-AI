@@ -1,5 +1,7 @@
-using Microsoft.AspNetCore.Mvc;
 using Medixa_AI.Application.DTOs;
+using Medixa_AI.Application.Interfaces;
+using Medixa_AI.Domain.Enums;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Medixa_AI.Api.Controllers.Api
 {
@@ -7,53 +9,100 @@ namespace Medixa_AI.Api.Controllers.Api
     [Route("api/[controller]")]
     public class ResultController : ControllerBase
     {
-        // TODO: Inject IResultService via constructor
-        // private readonly IResultService _resultService;
+        private readonly IResultService _resultService;
 
-        // GET: api/result
+        public ResultController(IResultService resultService)
+        {
+            _resultService = resultService;
+        }
+
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ResultDto>>> GetResults()
+        public async Task<ActionResult<IEnumerable<ResultDto>>> GetAll()
         {
-            // var results = await _resultService.GetAllResultsAsync();
-            // return Ok(results);
-            return Ok(new List<ResultDto>());
+            var results = await _resultService.GetAllAsync();
+            return Ok(results);
         }
 
-        // GET: api/result/{id}
         [HttpGet("{id}")]
-        public async Task<ActionResult<ResultDto>> GetResult(int id)
+        public async Task<ActionResult<ResultDto>> GetById(Guid id)
         {
-            // var result = await _resultService.GetResultByIdAsync(id);
-            // if (result == null) return NotFound();
-            // return Ok(result);
-            return Ok(new ResultDto());
+            var result = await _resultService.GetByIdAsync(id);
+            if (result == null)
+                return NotFound();
+            return Ok(result);
         }
 
-        // GET: api/result/order/{orderId}
+        [HttpGet("technician/{technicianId}")]
+        public async Task<ActionResult<IEnumerable<ResultDto>>> GetByTechnician(Guid technicianId)
+        {
+            var results = await _resultService.GetByTechnicianAsync(technicianId);
+            return Ok(results);
+        }
+
         [HttpGet("order/{orderId}")]
-        public async Task<ActionResult<IEnumerable<ResultDto>>> GetOrderResults(int orderId)
+        public async Task<ActionResult<IEnumerable<ResultDto>>> GetByOrder(Guid orderId)
         {
-            // var results = await _resultService.GetOrderResultsAsync(orderId);
-            // return Ok(results);
-            return Ok(new List<ResultDto>());
+            var results = await _resultService.GetByOrderAsync(orderId);
+            return Ok(results);
         }
 
-        // POST: api/result
         [HttpPost]
-        public async Task<ActionResult<ResultDto>> CreateResult([FromBody] CreateResultDto dto)
+        public async Task<ActionResult<ResultDto>> Create(ResultDto dto)
         {
-            // var result = await _resultService.CreateResultAsync(dto);
-            // return CreatedAtAction(nameof(GetResult), new { id = result.Id }, result);
-            return Ok(new ResultDto());
+            // Temporarily allow empty OrderDetailID for testing without OrderDetail setup
+            // if (dto.OrderDetailID == Guid.Empty)
+            //     return BadRequest("OrderDetailID is required.");
+
+            if (dto.TechnicianID == Guid.Empty)
+                return BadRequest("TechnicianID is required.");
+
+            if (!TryGetRequesterRole(out var requesterRole))
+                return Unauthorized("Invalid or missing role header.");
+
+            var created = await _resultService.CreateAsync(dto, requesterRole);
+            if (created == null)
+                return Unauthorized("Only Technician can create results.");
+
+            return CreatedAtAction(nameof(GetById), new { id = created.ResultID }, created);
         }
 
-        // PUT: api/result/{id}
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateResult(int id, [FromBody] UpdateResultDto dto)
+        public async Task<IActionResult> Update(Guid id, ResultDto dto)
         {
-            // await _resultService.UpdateResultAsync(id, dto);
-            // return NoContent();
+            if (dto.OrderDetailID == Guid.Empty)
+                return BadRequest("OrderDetailID is required.");
+
+            if (dto.TechnicianID == Guid.Empty)
+                return BadRequest("TechnicianID is required.");
+
+            if (!TryGetRequesterRole(out var requesterRole))
+                return Unauthorized("Invalid or missing role header.");
+
+            var result = await _resultService.UpdateAsync(id, dto, requesterRole);
+            if (!result)
+                return Unauthorized("Only Technician can update results.");
+
             return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            var result = await _resultService.DeleteAsync(id);
+            if (!result)
+                return NotFound();
+            return NoContent();
+        }
+
+        private bool TryGetRequesterRole(out EmployeeRole role)
+        {
+            if (!Request.Headers.ContainsKey("role"))
+            {
+                role = default;
+                return false;
+            }
+
+            return Enum.TryParse(Request.Headers["role"], true, out role);
         }
     }
 }
