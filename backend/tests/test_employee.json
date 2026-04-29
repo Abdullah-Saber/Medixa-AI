@@ -1,0 +1,9 @@
+{
+  "fullName": "John Doe",
+  "role": 1,
+  "phone": "1234567890",
+  "email": "john@example.com",
+  "salary": 5000,
+  "hireDate": "2024-01-01T00:00:00",
+  "isActive": true
+}

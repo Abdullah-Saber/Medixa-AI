@@ -1,0 +1,11 @@
+{
+  "orderID": "00000000-0000-0000-0000-000000000000",
+  "patientID": "aa6bc082-7e3f-f111-8fb3-5811227f724e",
+  "doctorID": null,
+  "orderDate": "2024-04-24T00:00:00",
+  "totalAmount": 500,
+  "status": 1,
+  "notes": "Routine checkup",
+  "createdByEmployeeID": "aaa1a991-7e3f-f111-8fb3-5811227f724e",
+  "createdAt": "2024-04-24T00:00:00"
+}

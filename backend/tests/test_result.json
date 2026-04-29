@@ -1,0 +1,10 @@
+{
+  "resultID": "00000000-0000-0000-0000-000000000000",
+  "orderDetailID": "00000000-0000-0000-0000-000000000000",
+  "resultValue": 120.5,
+  "resultText": "Normal",
+  "resultDate": "2024-04-24T00:00:00",
+  "technicianID": "aaa1a991-7e3f-f111-8fb3-5811227f724e",
+  "notes": "All values within normal range",
+  "createdAt": "2024-04-24T00:00:00"
+}
