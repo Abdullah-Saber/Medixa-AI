@@ -1,0 +1,100 @@
+@model Medixa_AI.Api.ViewModels.StaffDashboardViewModel
+@{
+    ViewData["Title"] = "Staff Dashboard";
+}
+
+<div class="row">
+    <div class="col-md-3">
+        <div class="card text-white bg-warning mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Pending Orders</h5>
+                <p class="card-text display-4">@Model.PendingOrders</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-info mb-3">
+            <div class="card-body">
+                <h5 class="card-title">In Progress</h5>
+                <p class="card-text display-4">@Model.InProgressOrders</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-success mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Completed Today</h5>
+                <p class="card-text display-4">@Model.CompletedToday</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-primary mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Total Lab Tests</h5>
+                <p class="card-text display-4">@Model.TotalLabTests</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>Pending Orders</h5>
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Patient Name</th>
+                            <th>Date</th>
+                            <th>Tests</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var order in Model.PendingOrdersList)
+                        {
+                            <tr>
+                                <td>@order.OrderID</td>
+                                <td>@order.PatientName</td>
+                                <td>@order.OrderDate.ToString("yyyy-MM-dd")</td>
+                                <td>@order.TestCount</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>Lab Test Statistics</h5>
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Test Name</th>
+                            <th>Total Performed</th>
+                            <th>Avg Turnaround (hrs)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var stat in Model.LabTestStats)
+                        {
+                            <tr>
+                                <td>@stat.TestName</td>
+                                <td>@stat.TotalPerformed</td>
+                                <td>@stat.AverageTurnaround</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
