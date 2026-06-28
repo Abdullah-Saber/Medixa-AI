@@ -1,0 +1,59 @@
+@model IEnumerable<Medixa_AI.Domain.Entities.Employee>
+@{
+    ViewData["Title"] = "Active Staff";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5>Active Staff Members</h5>
+                <a href="@Url.Action("Index", "StaffDashboard")" class="btn btn-secondary">Back to Dashboard</a>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Employee ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Phone</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var employee in Model)
+                        {
+                            <tr>
+                                <td>@employee.EmployeeID.ToString().Substring(0, 8)</td>
+                                <td>@employee.FullName</td>
+                                <td>@employee.Email</td>
+                                <td>@employee.Role</td>
+                                <td>@employee.Phone</td>
+                                <td>
+                                    <span class="badge bg-success">Active</span>
+                                </td>
+                                <td>
+                                    <a href="@Url.Action("Deactivate", "StaffDashboard", new { id = employee.EmployeeID })" 
+                                       class="btn btn-sm btn-warning" 
+                                       onclick="return confirm('Are you sure you want to deactivate this employee?')">
+                                        Deactivate
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                
+                @if (!Model.Any())
+                {
+                    <div class="text-center text-muted">
+                        <p>No active staff members found.</p>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,83 @@
+@model Medixa_AI.Api.ViewModels.PatientDashboardViewModel
+@{
+    ViewData["Title"] = "Patient Dashboard";
+}
+
+<h2>Welcome, @Model.FullName</h2>
+
+<div class="row mt-4">
+    <div class="col-md-3">
+        <div class="card text-white bg-primary mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Total Orders</h5>
+                <p class="card-text display-4">@Model.TotalOrders</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-warning mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Pending Results</h5>
+                <p class="card-text display-4">@Model.PendingResults</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-success mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Completed Results</h5>
+                <p class="card-text display-4">@Model.CompletedResults</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>Recent Orders</h5>
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Tests</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var order in Model.RecentOrders)
+                        {
+                            <tr>
+                                <td>@order.OrderID</td>
+                                <td>@order.OrderDate.ToString("yyyy-MM-dd")</td>
+                                <td>@order.Status</td>
+                                <td>@order.TestCount</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>Health Alerts</h5>
+            </div>
+            <div class="card-body">
+                @foreach (var alert in Model.HealthAlerts)
+                {
+                    <div class="alert @(alert.Severity == "High" ? "alert-danger" : alert.Severity == "Medium" ? "alert-warning" : "alert-info")">
+                        <strong>@alert.Type:</strong> @alert.Message
+                        <br />
+                        <small class="text-muted">@alert.Date.ToString("yyyy-MM-dd")</small>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

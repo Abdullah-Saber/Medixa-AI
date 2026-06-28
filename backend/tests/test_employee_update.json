@@ -1,0 +1,10 @@
+{
+  "employeeID": "4a35a525-7c3f-f111-8fb3-5811227f724e",
+  "fullName": "John Smith",
+  "role": 2,
+  "phone": "9876543210",
+  "email": "johnsmith@example.com",
+  "salary": 6000,
+  "hireDate": "2024-01-01T00:00:00",
+  "isActive": true
+}

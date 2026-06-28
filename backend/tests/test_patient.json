@@ -1,0 +1,13 @@
+{
+  "patientID": "00000000-0000-0000-0000-000000000000",
+  "fullName": "Ahmed Mohamed",
+  "nationalID": "12345678901234",
+  "phone": "5551112222",
+  "email": "ahmed@example.com",
+  "gender": 1,
+  "dateOfBirth": "1990-05-15",
+  "address": "123 Main St, Cairo",
+  "bloodType": "O+",
+  "registrationDate": "2024-01-01T00:00:00",
+  "isActive": true
+}

@@ -1,0 +1,79 @@
+@model IEnumerable<Medixa_AI.Domain.Entities.Employee>
+@{
+    ViewData["Title"] = "Staff by Role";
+    var role = Context.Request.RouteValues["role"]?.ToString() ?? "Unknown";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5>Staff Members - @role</h5>
+                <div>
+                    <a href="@Url.Action("Index", "StaffDashboard")" class="btn btn-secondary">Back to Dashboard</a>
+                    <a href="@Url.Action("Active", "StaffDashboard")" class="btn btn-info">Active Staff</a>
+                </div>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Employee ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var employee in Model)
+                        {
+                            <tr>
+                                <td>@employee.EmployeeID.ToString().Substring(0, 8)</td>
+                                <td>@employee.FullName</td>
+                                <td>@employee.Email</td>
+                                <td>@employee.Phone</td>
+                                <td>
+                                    @if (employee.IsActive)
+                                    {
+                                        <span class="badge bg-success">Active</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary">Inactive</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (employee.IsActive)
+                                    {
+                                        <a href="@Url.Action("Deactivate", "StaffDashboard", new { id = employee.EmployeeID })" 
+                                           class="btn btn-sm btn-warning" 
+                                           onclick="return confirm('Are you sure you want to deactivate this employee?')">
+                                            Deactivate
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <a href="@Url.Action("Activate", "StaffDashboard", new { id = employee.EmployeeID })" 
+                                           class="btn btn-sm btn-success" 
+                                           onclick="return confirm('Are you sure you want to activate this employee?')">
+                                            Activate
+                                        </a>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                
+                @if (!Model.Any())
+                {
+                    <div class="text-center text-muted">
+                        <p>No staff members found for role: @role</p>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

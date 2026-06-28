@@ -1,0 +1,9 @@
+{
+  "doctorID": "00000000-0000-0000-0000-000000000000",
+  "fullName": "Dr. Sarah Johnson",
+  "phone": "5551234567",
+  "email": "sarah.johnson@medixa.com",
+  "specializationID": 1,
+  "clinicName": "Medixa Central Clinic",
+  "isActive": true
+}

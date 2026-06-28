@@ -1,0 +1,56 @@
+@model IEnumerable<Medixa_AI.Domain.Entities.TestOrder>
+@{
+    ViewData["Title"] = "Orders";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5>All Orders</h5>
+                <a href="@Url.Action("Index", "DoctorDashboard")" class="btn btn-secondary">Back to Dashboard</a>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Patient ID</th>
+                            <th>Order Date</th>
+                            <th>Status</th>
+                            <th>Test Count</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var order in Model)
+                        {
+                            <tr>
+                                <td>@order.OrderID.ToString().Substring(0, 8)</td>
+                                <td>@order.PatientID.ToString().Substring(0, 8)</td>
+                                <td>@order.OrderDate.ToString("yyyy-MM-dd HH:mm")</td>
+                                <td>
+                                    <span class="badge @(order.Status == Medixa_AI.Domain.Enums.OrderStatus.Completed ? "bg-success" : 
+                                                   order.Status == Medixa_AI.Domain.Enums.OrderStatus.Pending ? "bg-warning" : "bg-info")">
+                                        @order.Status
+                                    </span>
+                                </td>
+                                <td>@(order.OrderDetails?.Count ?? 0)</td>
+                                <td>
+                                    <a href="@Url.Action("Details", "Order", new { id = order.OrderID })" class="btn btn-sm btn-primary">View Details</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                
+                @if (!Model.Any())
+                {
+                    <div class="text-center text-muted">
+                        <p>No orders found.</p>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

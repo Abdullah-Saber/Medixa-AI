@@ -1,0 +1,10 @@
+{
+  "employeeID": "00000000-0000-0000-0000-000000000000",
+  "fullName": "Nurse Fatima",
+  "role": 3,
+  "phone": "5553334444",
+  "email": "fatima@medixa.com",
+  "salary": 4000,
+  "hireDate": "2024-01-01T00:00:00",
+  "isActive": true
+}
